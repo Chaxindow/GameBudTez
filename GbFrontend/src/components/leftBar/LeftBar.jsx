@@ -12,16 +12,21 @@ import Messages from "/images/10.png";
 import Tutorials from "/images/11.png";
 import Courses from "/images/12.png";
 import Fund from "/images/13.png";
+import { useContext } from "react";
+import { AuthContext } from "../../context/authContext";
 
 
 const LeftBar = () => {
+
+  const {currentUser} = useContext(AuthContext);
+
   return (
     <div className="leftBar">
       <div className="container">
         <div className="menu">
           <div className="user">
-              <img src="/images/yigitpp.jpg" alt=""/>
-              <span>Yiğit Sağlam</span>
+              <img src={currentUser.profilePic} alt=""/>
+              <span>{currentUser.name}</span>
           </div>
           <div className="item">
             <img src={Friends} alt=""/>
