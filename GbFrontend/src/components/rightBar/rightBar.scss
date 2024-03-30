@@ -9,6 +9,14 @@
     overflow: scroll;
     background-color: themed("bgSoft");
 
+    @include mobile{
+      display: none;
+    }
+
+    @include tablet{
+      display: none;
+    }
+
     &::-webkit-scrollbar {
       display: none;
     }
@@ -79,7 +87,7 @@
               cursor: pointer;
 
               &:first-child {
-                background-color: rgb(31, 219, 31);
+                background-color: rgb(0, 152, 0);
               }
               &:last-child {
                 background-color: red;
