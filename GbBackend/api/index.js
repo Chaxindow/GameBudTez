@@ -10,11 +10,11 @@ const app = express();
 //middlewares
 app.use(express.json());
 
-app.use("/api/v1/auth", authRoutes);
-app.use("/api/v1/users", userRoutes);
-app.use("/api/v1/posts", postRoutes);
-app.use("/api/v1/comments", commentRoutes);
-app.use("/api/v1/likes", likeRoutes);
+app.use("/api/auth", authRoutes);
+app.use("/api/users", userRoutes);
+app.use("/api/posts", postRoutes);
+app.use("/api/comments", commentRoutes);
+app.use("/api/likes", likeRoutes);
 
 app.listen(8800, () => {
   console.log("API Works");

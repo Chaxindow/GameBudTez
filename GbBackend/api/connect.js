@@ -5,10 +5,14 @@ export const db = mysql.createConnection({
   host: "localhost",
   port: 3306,
   user: "root",
-  password: "1234",
-  database: "gamebud",
+  password: "Doggerygt1907.",
+  database: "social",
 });
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 0d32800f5f5a779204d013809d43e9f5aabdb6f7
 // MySQL sunucusuna bağlanma işlemi
 db.connect(function (err) {
   if (err) {
@@ -23,3 +27,7 @@ db.connect(function (err) {
 db.on("error", function (err) {
   console.error("Beklenmeyen MySQL bağlant hatas: " + err.code);
 });
+<<<<<<< HEAD
+=======
+
+>>>>>>> 0d32800f5f5a779204d013809d43e9f5aabdb6f7
