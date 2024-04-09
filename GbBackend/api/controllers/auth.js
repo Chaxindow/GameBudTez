@@ -1,9 +1,10 @@
 import { db } from "../connect.js";
+import bcrypt from "bcryptjs";
 
 export const register = (req, res) => {
   //CHECK USER IF EXISTS
 
-  const q = "SELECT * FROM users WHERE username= ?";
+  const q = "SELECT *  FROM users WHERE username = ?";
 
   db.query(q, [req.body.username], (err, data) => {
     if (err) return res.status(500).json(err);
@@ -14,7 +15,7 @@ export const register = (req, res) => {
     const hashedPassword = bcrypt.hashSync(req.body.password, salt);
 
     const q =
-      "INSERT INTO users (`username`,`email`,` password`,` name`     ) VALUE(?)";
+      "INSERT INTO users (`username`,`email`,` password`,` name`) VALUES (?)";
 
     const values = [
       req.body.username,
