@@ -4,18 +4,18 @@ import bcrypt from "bcryptjs";
 export const register = (req, res) => {
   //CHECK USER IF EXISTS
 
-  const q = "SELECT *  FROM users WHERE username = ?";
+  const q = "SELECT * FROM users WHERE username = ?";
 
   db.query(q, [req.body.username], (err, data) => {
     if (err) return res.status(500).json(err);
     if (data.length) return res.status(409).json("User already exists!");
-    // CREATE NEW USER
-    // HASH TH PASSWORD
+    //CREATE A NEW USER
+    //Hash the password
     const salt = bcrypt.genSaltSync(10);
     const hashedPassword = bcrypt.hashSync(req.body.password, salt);
 
     const q =
-      "INSERT INTO users (`username`,`email`,` password`,` name`) VALUES (?)";
+      "INSERT INTO users (`username`,`email`,`password`,`name`) VALUE (?)";
 
     const values = [
       req.body.username,
@@ -23,14 +23,11 @@ export const register = (req, res) => {
       hashedPassword,
       req.body.name,
     ];
-    db.query[
-      (q,
-      [values],
-      (err, data) => {
-        if (err) return res.status(500).json(err);
-        return res.status(200).json("User hass been created.");
-      })
-    ];
+
+    db.query(q, [values], (err, data) => {
+      if (err) return res.status(500).json(err);
+      return res.status(200).json("User has been created.");
+    });
   });
 };
 
