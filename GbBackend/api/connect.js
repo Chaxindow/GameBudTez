@@ -5,14 +5,10 @@ export const db = mysql.createConnection({
   host: "localhost",
   port: 3306,
   user: "root",
-  password: "Doggerygt1907.",
-  database: "social",
+  password: "1234.",
+  database: "gamebud",
 });
 
-<<<<<<< HEAD
-=======
-
->>>>>>> 0d32800f5f5a779204d013809d43e9f5aabdb6f7
 // MySQL sunucusuna bağlanma işlemi
 db.connect(function (err) {
   if (err) {
@@ -20,14 +16,12 @@ db.connect(function (err) {
     return;
   }
 
-  console.log("MySQL sunucusuna başaryla bağlan. Bağlant ID: " + db.threadId);
+  console.log(
+    "MySQL sunucusuna başaryla bağlanildi. Bağlant ID: " + db.threadId
+  );
 });
 
 // MySQL sunucusundan gelen hataları ele alma
 db.on("error", function (err) {
   console.error("Beklenmeyen MySQL bağlant hatas: " + err.code);
 });
-<<<<<<< HEAD
-=======
-
->>>>>>> 0d32800f5f5a779204d013809d43e9f5aabdb6f7
