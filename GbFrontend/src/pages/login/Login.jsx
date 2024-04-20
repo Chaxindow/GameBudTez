@@ -48,7 +48,7 @@ const Login = () => {
                 onChange={handleChange}
               />
               <input
-                type="text"
+                type="password"
                 placeholder="Password"
                 name="password"
                 onChange={handleChange}
