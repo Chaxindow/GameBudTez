@@ -50,9 +50,9 @@ const Comments = ({ postId }) => {
       {error
         ? "Something went wrong"
         : isLoading
-        ? "loading"
+        ? "Loading..."
         : data.map((comment) => (
-            <div className="comment">
+            <div className="comment" key={comment.id}>
               <img src={comment.profilePic} alt="" />
               <div className="info">
                 <Link
