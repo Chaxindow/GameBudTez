@@ -2,11 +2,11 @@ import mysql from "mysql";
 
 // MySQL bağlantı bilgilerini içeren nesne
 export const db = mysql.createConnection({
-  host: "localhost",
+  host: "sql11.freesqldatabase.com",
   port: 3306,
-  user: "root",
-  password: "1234",
-  database: "gamebud",
+  user: "sql11705274",
+  password: "TyBUnYwqN8",
+  database: "sql11705274",
 });
 
 // MySQL sunucusuna bağlanma işlemi
@@ -25,3 +25,9 @@ db.connect(function (err) {
 db.on("error", function (err) {
   console.error("Beklenmeyen MySQL bağlant hatas: " + err.code);
 });
+
+/*Host: sql11.freesqldatabase.com
+Database name: sql11705274
+Database user: sql11705274
+Database password: TyBUnYwqN8
+Port number: 3306 */

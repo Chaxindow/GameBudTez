@@ -8,6 +8,7 @@ const Posts = ({ userId }) => {
     queryKey: ["posts"],
     queryFn: () =>
       makeRequest.get("/posts?userId=" + userId).then((res) => {
+        console.log("Calistim");
         return res.data;
       }),
   });
