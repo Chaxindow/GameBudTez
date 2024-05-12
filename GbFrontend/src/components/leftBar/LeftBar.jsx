@@ -1,17 +1,5 @@
 import "./leftBar.scss";
 import Friends from "/images/1.png";
-import Groups from "/images/2.png";
-import Market from "/images/3.png";
-import Watch from "/images/4.png";
-import Memories from "/images/5.png";
-import Events from "/images/6.png";
-import Gaming from "/images/7.png";
-import Gallery from "/images/8.png";
-import Videos from "/images/9.png";
-import Messages from "/images/10.png";
-import Tutorials from "/images/11.png";
-import Courses from "/images/12.png";
-import Fund from "/images/13.png";
 import { Link } from "react-router-dom";
 import { useContext } from "react";
 import { AuthContext } from "../../context/authContext";

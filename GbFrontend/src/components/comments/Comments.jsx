@@ -61,7 +61,7 @@ const Comments = ({ postId }) => {
                 >
                   <span>{comment.name}</span>
                 </Link>
-                <p>{comment.desc}</p>
+                <p>{comment.description}</p>
               </div>
               <span className="date">
                 {moment(comment.createdAt).fromNow()}

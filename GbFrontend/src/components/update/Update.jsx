@@ -12,6 +12,8 @@ const Update = ({ setOpenUpdate, user }) => {
     website: user.website,
   });
 
+  console.log(user.name);
+
   const upload = async (file) => {
     console.log(file);
     try {

@@ -19,8 +19,6 @@ export const getPosts = (req, res) => {
   ORDER BY p.createdAt DESC
   `;
 
-    console.log("heyyoo");
-
     const values =
       userId !== "undefined" ? [userId] : [userInfo.id, userInfo.id];
 
