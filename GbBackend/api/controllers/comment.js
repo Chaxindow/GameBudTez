@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken";
 import moment from "moment";
 
 export const getComments = (req, res) => {
-  const q = `SELECT c.*,u.id AS userId, u.name, u.profilePic  FROM comments AS c JOIN users AS u ON (u.id = c.userID) 
+  const q = `SELECT c.*,u.id AS userId, u.name, u.profilePic  FROM comments AS c JOIN users AS u ON (u.id = c.userId) 
       WHERE c.postId = ? ORDER BY c.createdAt DESC
       `;
 
@@ -22,7 +22,7 @@ export const addComment = (req, res) => {
     if (err) return res.status(403).json("Token is not valid!");
 
     const q =
-      "INSERT INTO comments(`desc`,`createdAt`,`userID`,`postId`) VALUES (?)";
+      "INSERT INTO comments(`description`,`createdAt`,`userId`,`postId`) VALUES (?)";
     const values = [
       req.body.desc,
       moment(Date.now()).format("YYYY-MM-DD HH:mm:ss"),
