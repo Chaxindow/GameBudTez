@@ -47,7 +47,11 @@ const Navbar = () => {
           <DarkModeOutlinedIcon onClick={toggle} cursor="pointer" />
         )}
         <GridViewOutlinedIcon />
-        <StoreOutlinedIcon />
+        <Link to="/store" style={{ textDecoration: "none", color: "inherit" }} >
+          <StoreOutlinedIcon style={{ color: "inherit", marginTop: "6px" }} />
+        </Link>
+        
+
         <div className="search">
           <SearchOutlinedIcon />
           <input type="text" placeholder="Bul beni..." />

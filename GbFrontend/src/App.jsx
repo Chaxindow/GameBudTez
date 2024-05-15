@@ -1,5 +1,4 @@
-import Login from "./pages/login/Login";
-import Register from "./pages/register/Register";
+import React from "react";
 import {
   createBrowserRouter,
   Navigate,
@@ -11,6 +10,9 @@ import LeftBar from "./components/leftBar/LeftBar";
 import RightBar from "./components/rightBar/RightBar";
 import Home from "./pages/home/Home";
 import Profile from "./pages/profile/Profile";
+import StoreHome from "./pages/StoreHome"; // StoreHome bileşenini ekleyin
+import Login from "./pages/login/Login";
+import Register from "./pages/register/Register";
 import "./style.scss";
 import { useContext } from "react";
 import { DarkModeContext } from "./context/darkModeContext";
@@ -19,9 +21,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 function App() {
   const { currentUser } = useContext(AuthContext);
-
   const { darkMode } = useContext(DarkModeContext);
-
   const queryClient = new QueryClient();
 
   const Layout = () => {
@@ -34,7 +34,6 @@ function App() {
             <div style={{ flex: 5 }}>
               <Outlet />
             </div>
-
             <RightBar />
           </div>
         </div>
@@ -66,6 +65,7 @@ function App() {
           path: "/profile/:id",
           element: <Profile />,
         },
+       
       ],
     },
     {
@@ -75,6 +75,10 @@ function App() {
     {
       path: "/register",
       element: <Register />,
+    },
+    {
+      path: "/store", // Mağaza rotası
+      element: <StoreHome />,
     },
   ]);
 
