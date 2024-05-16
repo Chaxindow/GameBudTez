@@ -18,6 +18,9 @@ import { useContext } from "react";
 import { DarkModeContext } from "./context/darkModeContext";
 import { AuthContext } from "./context/authContext";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import ProductList from "./pages/ProductList";
+import Product from "./pages/Product";
+import Cart from "./pages/Cart";
 
 function App() {
   const { currentUser } = useContext(AuthContext);
@@ -79,6 +82,18 @@ function App() {
     {
       path: "/store", // Mağaza rotası
       element: <StoreHome />,
+    },
+    {
+      path: "/productlist", // Mağaza rotası
+      element: <ProductList />,
+    },
+    {
+      path: "/product", // Mağaza rotası
+      element: <Product />,
+    },
+    {
+      path: "/sepet", // Mağaza rotası
+      element: <Cart />,
     },
   ]);
 

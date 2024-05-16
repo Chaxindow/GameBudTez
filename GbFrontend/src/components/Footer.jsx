@@ -100,22 +100,25 @@ import { Link } from "react-router-dom";
             </SocialIcon>
             
           </SocialContainer>
+          <Date></Date>
         </Left>
         <Center>
           <Title>Linkler</Title>
           <List>
-            <ListItem>Mağaza</ListItem>
+            <Link to="/product" style={{ textDecoration: "none", color: "inherit", }}>
+            <ListItem style={{ paddingRight: "174px" }}>Mağaza</ListItem>
+            </Link>
+            
             <ListItem>Sepet</ListItem>
+
             <ListItem>Sosyal</ListItem>
             <ListItem>Favoriler</ListItem>
             
           </List>
+          
         </Center>
         <Right>
           <Title>Contact</Title>
-          <ContactItem>
-            
-          </ContactItem>
           <ContactItem>
             <PhoneAndroidOutlined style={{marginRight:"10px"}}/> +90 535 213 5465
           </ContactItem>
@@ -123,6 +126,8 @@ import { Link } from "react-router-dom";
             <MailOutlined style={{marginRight:"10px"}} /> gamebud77@gmail.com
           </ContactItem>
           <Payment src="https://i.ibb.co/Qfvn4z6/payment.png" />
+
+          
         </Right>
       </Container>
     );
