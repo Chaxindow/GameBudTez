@@ -48,7 +48,7 @@ const CategoryItem = ({ item }) => {
       <Image src={item.img} />
       <Info>
         <Title>{item.title}</Title>
-        <Link to="/product" style={{ textDecoration: "none", color: "inherit" }}>
+        <Link to="/productlist" style={{ textDecoration: "none", color: "inherit" }}>
           <Button>Turnuvaları Gör</Button>
         </Link>
         
