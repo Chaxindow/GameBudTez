@@ -105,7 +105,7 @@ import { Link } from "react-router-dom";
         <Center>
           <Title>Linkler</Title>
           <List>
-            <Link to="/product" style={{ textDecoration: "none", color: "inherit", }}>
+            <Link to="/store" style={{ textDecoration: "none", color: "inherit", }}>
             <ListItem style={{ paddingRight: "174px" }}>Mağaza</ListItem>
             </Link>
             
