@@ -18,20 +18,17 @@ const FilterContainer = styled.div`
 
 const Filter = styled.div`
   margin: 20px;
- 
 `;
 
 const FilterText = styled.span`
   font-size: 20px;
   font-weight: 600;
   margin-right: 20px;
-  
 `;
 
 const Select = styled.select`
   padding: 10px;
   margin-right: 20px;
- 
 `;
 const Option = styled.option``;
 
@@ -44,10 +41,10 @@ const ProductList = () => {
       <FilterContainer>
         <Filter>
           <FilterText>Filtre:</FilterText>
-          
+
           <Select>
             <Option disabled selected>
-              Oyunlar
+              Oyunlar1
             </Option>
             <Option>EA FC 24</Option>
             <Option>CS GO</Option>
