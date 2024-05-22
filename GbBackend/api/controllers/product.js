@@ -26,8 +26,6 @@ export const getProduct = (req, res) => {
   const productId = req.params.productId;
   if (!token) return res.status(401).json("Not logged in!");
 
-  console.log(productId);
-
   jwt.verify(token, "secretkey", (err, userInfo) => {
     if (err) return res.status(403).json("Token is not valid!");
 

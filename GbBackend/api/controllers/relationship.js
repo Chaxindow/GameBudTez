@@ -38,7 +38,7 @@ export const deleteRelationship = (req, res) => {
     if (err) return res.status(403).json("Token is not valid!");
 
     const q =
-      "DELETE FROM realationships WHERE `followerUserId` = ? AND `followedUserId` = ?";
+      "DELETE FROM relationships WHERE `followerUserId` = ? AND `followedUserId` = ?";
 
     db.query(q, [userInfo.id, req.query.userId], (err, data) => {
       if (err) return res.status(500).json(err);

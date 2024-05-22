@@ -68,7 +68,6 @@ function App() {
           path: "/profile/:id",
           element: <Profile />,
         },
-       
       ],
     },
     {
