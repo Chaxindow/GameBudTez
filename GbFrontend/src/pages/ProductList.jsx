@@ -4,6 +4,8 @@ import Products from "../components/Products";
 import Newsletter from "../components/Newsletter";
 import Footer from "../components/Footer";
 import StoreNavbar from "../components/StoreNavbar";
+import { useQuery } from "@tanstack/react-query";
+import { makeRequest } from "../axios";
 
 const Container = styled.div``;
 
@@ -33,37 +35,33 @@ const Select = styled.select`
 const Option = styled.option``;
 
 const ProductList = () => {
+  const { isLoading, error, data } = useQuery({
+    queryKey: ["products"],
+    queryFn: () =>
+      makeRequest.get("/products").then((res) => {
+        return res.data;
+      }),
+  });
+
   return (
     <Container>
       <StoreNavbar />
       <Announcement />
-      <Title>Dresses</Title>
+      <Title>Oyunlar</Title>
       <FilterContainer>
         <Filter>
           <FilterText>Filtre:</FilterText>
-
-          <Select>
-            <Option disabled selected>
-              Oyunlar1
-            </Option>
-            <Option>EA FC 24</Option>
-            <Option>CS GO</Option>
-            <Option>ROCKET LEAGUE</Option>
-            <Option>COD</Option>
-            <Option>PUBG</Option>
-            <Option>VALORANT</Option>
-            <Option>FORTNITE</Option>
-            <Option>APEX</Option>
-          </Select>
+          {data && (
+            <Select>
+              {data.map((product) => (
+                <Option key={product.id} value={product.title}>
+                  {product.title}
+                </Option>
+              ))}
+            </Select>
+          )}
         </Filter>
-        <Filter>
-          <FilterText>Sırala:</FilterText>
-          <Select>
-            <Option selected>En yeni</Option>
-            <Option>Fiyat (artan)</Option>
-            <Option>Fiyat (azalan)</Option>
-          </Select>
-        </Filter>
+        <Filter></Filter>
       </FilterContainer>
       <Products />
       <Newsletter />

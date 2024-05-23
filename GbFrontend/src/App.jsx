@@ -80,19 +80,39 @@ function App() {
     },
     {
       path: "/store", // Mağaza rotası
-      element: <StoreHome />,
+      element: (
+        <QueryClientProvider client={queryClient}>
+          {" "}
+          <StoreHome />
+        </QueryClientProvider>
+      ),
     },
     {
       path: "/productlist", // Mağaza rotası
-      element: <ProductList />,
+      element: (
+        <QueryClientProvider client={queryClient}>
+          {" "}
+          <ProductList />
+        </QueryClientProvider>
+      ),
     },
     {
-      path: "/product", // Mağaza rotası
-      element: <Product />,
+      path: "/product/:productId", // Mağaza rotası
+      element: (
+        <QueryClientProvider client={queryClient}>
+          {" "}
+          <Product />{" "}
+        </QueryClientProvider>
+      ),
     },
     {
       path: "/sepet", // Mağaza rotası
-      element: <Cart />,
+      element: (
+        <QueryClientProvider client={queryClient}>
+          {" "}
+          <Cart />{" "}
+        </QueryClientProvider>
+      ),
     },
   ]);
 

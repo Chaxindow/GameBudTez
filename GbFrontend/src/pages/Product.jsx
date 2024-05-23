@@ -3,16 +3,18 @@ import Announcement from "../components/Announcement";
 import Footer from "../components/Footer";
 import StoreNavbar from "../components/StoreNavbar";
 import Newsletter from "../components/Newsletter";
-import AddIcon from '@mui/icons-material/Add';
-import RemoveIcon from '@mui/icons-material/Remove';
-
+import AddIcon from "@mui/icons-material/Add";
+import RemoveIcon from "@mui/icons-material/Remove";
+import { useQuery } from "@tanstack/react-query";
+import { makeRequest } from "../axios";
+import { useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
 
 const Container = styled.div``;
 
 const Wrapper = styled.div`
   padding: 50px;
   display: flex;
-  
 `;
 
 const ImgContainer = styled.div`
@@ -23,13 +25,11 @@ const Image = styled.img`
   width: 100%;
   height: 90vh;
   object-fit: cover;
-  
 `;
 
 const InfoContainer = styled.div`
   flex: 1;
   padding: 0px 50px;
-  
 `;
 
 const Title = styled.h1`
@@ -50,7 +50,6 @@ const FilterContainer = styled.div`
   margin: 30px 0px;
   display: flex;
   justify-content: space-between;
-  
 `;
 
 const Filter = styled.div`
@@ -84,7 +83,6 @@ const AddContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  
 `;
 
 const AmountContainer = styled.div`
@@ -111,27 +109,32 @@ const Button = styled.button`
   cursor: pointer;
   font-weight: 500;
 
-  &:hover{
-      background-color: #f8f4f4;
+  &:hover {
+    background-color: #f8f4f4;
   }
 `;
 
 const Product = () => {
+  const { productId } = useParams();
+
+  const { isLoading, error, data } = useQuery({
+    queryKey: ["product", productId],
+    queryFn: () =>
+      makeRequest.get(`/products/find/${productId}`).then((res) => {
+        return res.data[0];
+      }),
+  });
+
   return (
     <Container>
       <StoreNavbar />
       <Announcement />
       <Wrapper>
-        <ImgContainer>
-          <Image src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRv2B8ljhk6jBdoQsa2P9CrSpBVGcQvAeXVWg&s" />
-        </ImgContainer>
+        <ImgContainer>{data && <Image src={data.img} />}</ImgContainer>
         <InfoContainer>
-          <Title>EA FC 24 1 VS 1 </Title>
-          <Desc>
-            EA FC 24 2500 TL ÖDÜLLÜ TURNUVA 25.07.2024 SAAT 11.00 DETAYLI BİLGİ İÇİN 
-            +90 535 213 5465
-          </Desc>
-          <Price>100 TL</Price>
+          <Title> {data && data.title} </Title>
+          <Desc>{data && data.description}</Desc>
+          <Price>{data && data.price}</Price>
           <AddContainer>
             <AmountContainer>
               <RemoveIcon />
