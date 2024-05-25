@@ -21,6 +21,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import ProductList from "./pages/ProductList";
 import Product from "./pages/Product";
 import Cart from "./pages/Cart";
+import Chat from "./pages/chat/Chat";
 
 function App() {
   const { currentUser } = useContext(AuthContext);
@@ -111,6 +112,15 @@ function App() {
         <QueryClientProvider client={queryClient}>
           {" "}
           <Cart />{" "}
+        </QueryClientProvider>
+      ),
+    },
+    {
+      path: "/chat", // Mağaza rotası
+      element: (
+        <QueryClientProvider client={queryClient}>
+          {" "}
+          <Chat />{" "}
         </QueryClientProvider>
       ),
     },

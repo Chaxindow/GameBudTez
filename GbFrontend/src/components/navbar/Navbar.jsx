@@ -47,10 +47,9 @@ const Navbar = () => {
           <DarkModeOutlinedIcon onClick={toggle} cursor="pointer" />
         )}
         <GridViewOutlinedIcon />
-        <Link to="/store" style={{ textDecoration: "none", color: "inherit" }} >
+        <Link to="/store" style={{ textDecoration: "none", color: "inherit" }}>
           <StoreOutlinedIcon style={{ color: "inherit", marginTop: "6px" }} />
         </Link>
-        
 
         <div className="search">
           <SearchOutlinedIcon />
@@ -59,7 +58,9 @@ const Navbar = () => {
       </div>
       <div className="right">
         <PersonOutlinedIcon />
-        <EmailOutlinedIcon />
+        <Link to="/chat">
+          <EmailOutlinedIcon />
+        </Link>
         <NotificationsOutlinedIcon />
         <div className="user">
           <img src={"/upload/" + currentUser.profilePic} alt="" />
