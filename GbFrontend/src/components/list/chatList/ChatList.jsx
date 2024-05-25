@@ -43,41 +43,6 @@ export const ChatList = () => {
           <p>Hello</p>
         </div>
       </div>
-      <div className="item">
-        <img src="../../../../images/yigitpp.jpg" />
-        <div className="texts">
-          <span>joe doe</span>
-          <p>Hello</p>
-        </div>
-      </div>
-      <div className="item">
-        <img src="../../../../images/yigitpp.jpg" />
-        <div className="texts">
-          <span>joe doe</span>
-          <p>Hello</p>
-        </div>
-      </div>
-      <div className="item">
-        <img src="../../../../images/yigitpp.jpg" />
-        <div className="texts">
-          <span>joe doe</span>
-          <p>Hello</p>
-        </div>
-      </div>
-      <div className="item">
-        <img src="../../../../images/yigitpp.jpg" />
-        <div className="texts">
-          <span>joe doe</span>
-          <p>Hello</p>
-        </div>
-      </div>
-      <div className="item">
-        <img src="../../../../images/yigitpp.jpg" />
-        <div className="texts">
-          <span>joe doe</span>
-          <p>Hello</p>
-        </div>
-      </div>
     </div>
   );
 };
