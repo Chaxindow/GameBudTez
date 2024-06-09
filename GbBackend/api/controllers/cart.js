@@ -85,8 +85,8 @@ export const updateCart = (req, res) => {
   jwt.verify(token, "secretkey", (err, userInfo) => {
     if (err) return res.status(403).json("Token is not valid!");
 
-    const { productId } = req.params; // req.params ile productId alınır
-    const { quantity } = req.body; // req.body ile quantity alınır
+    const { productId } = req.params;
+    const { quantity } = req.body;
     const userId = userInfo.id;
 
     const q = `UPDATE carts SET quantity = ? WHERE userId = ? AND productId = ?`;

@@ -5,10 +5,11 @@ import StoreNavbar from "../components/StoreNavbar";
 import Newsletter from "../components/Newsletter";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { makeRequest } from "../axios";
 import { useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { AuthContext } from "../context/authContext";
 
 const Container = styled.div``;
 
@@ -116,6 +117,8 @@ const Button = styled.button`
 
 const Product = () => {
   const { productId } = useParams();
+  const { currentUser } = useContext(AuthContext);
+  const [quantity, setQuantity] = useState(1);
 
   const { isLoading, error, data } = useQuery({
     queryKey: ["product", productId],
@@ -124,6 +127,32 @@ const Product = () => {
         return res.data[0];
       }),
   });
+
+  const handleAddToCart = async () => {
+    try {
+      console.log(currentUser.id);
+      console.log(productId);
+
+      const response = await makeRequest.post("/cart/add", {
+        userId: currentUser.id,
+        productId: productId,
+        quantity: quantity,
+      });
+      // window.location.href = "/sepet";
+    } catch (error) {
+      console.error("Error adding product to cart:", error);
+    }
+  };
+
+  const increment = () => {
+    setQuantity((prevQuantity) => prevQuantity + 1);
+  };
+
+  const decrement = () => {
+    if (quantity > 1) {
+      setQuantity((prevQuantity) => prevQuantity - 1);
+    }
+  };
 
   return (
     <Container>
@@ -137,11 +166,11 @@ const Product = () => {
           <Price>{data && data.price}</Price>
           <AddContainer>
             <AmountContainer>
-              <RemoveIcon />
-              <Amount>1</Amount>
-              <AddIcon />
+              <RemoveIcon onClick={decrement} />
+              <Amount>{quantity}</Amount>
+              <AddIcon onClick={increment} />
             </AmountContainer>
-            <Button>Sepete Ekle</Button>
+            <Button onClick={handleAddToCart}>Sepete Ekle</Button>
           </AddContainer>
         </InfoContainer>
       </Wrapper>
