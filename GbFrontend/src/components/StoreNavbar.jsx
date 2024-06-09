@@ -1,14 +1,14 @@
-import React from 'react';
+import React from "react";
 import styled from "styled-components";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
-import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
-import ShoppingCartOutlined from '@mui/icons-material/ShoppingCartOutlined';
+import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
+import ShoppingCartOutlined from "@mui/icons-material/ShoppingCartOutlined";
 import { Link } from "react-router-dom";
-import { mobile } from '../responsive';
+import { mobile } from "../responsive";
 
 const Container = styled.div`
   height: 60px;
-  ${mobile({height: "50px" })}
+  ${mobile({ height: "50px" })}
 `;
 
 const Wrapper = styled.div`
@@ -72,30 +72,29 @@ const MenuItem = styled.div`
 const StoreNavbar = () => {
   return (
     <Container>
-        <Wrapper>
-            <Left>
-                <Language>TR</Language>
-                <SearchContainer>
-                    <Input placeholder="Bul beni..." />
-                    <SearchOutlinedIcon style={{ color: "gray", fontSize: 16 }}/>
-                </SearchContainer>
-            </Left>
-            <Center>
-                <Link to="/" style={{ textDecoration: "none", color: "inherit" }}>
-                <Logo>GameBud</Logo>
-                </Link>
-            </Center>
-            <Right>
-                
-                <MenuItem>
-                
-                    <ShoppingCartOutlined />
-                    
-                </MenuItem>
-            </Right>
-        </Wrapper>
+      <Wrapper>
+        <Left>
+          <Language>TR</Language>
+          <SearchContainer>
+            <Input placeholder="Bul beni..." />
+            <SearchOutlinedIcon style={{ color: "gray", fontSize: 16 }} />
+          </SearchContainer>
+        </Left>
+        <Center>
+          <Link to="/" style={{ textDecoration: "none", color: "inherit" }}>
+            <Logo>GameBud</Logo>
+          </Link>
+        </Center>
+        <Right>
+          <MenuItem>
+            <Link to="/sepet">
+              <ShoppingCartOutlined />
+            </Link>
+          </MenuItem>
+        </Right>
+      </Wrapper>
     </Container>
-  )
-}
+  );
+};
 
-export default StoreNavbar
+export default StoreNavbar;
