@@ -12,8 +12,6 @@ export const getUserCart = (req, res) => {
 
     const q = `SELECT * FROM carts WHERE userId = ?  ;`;
 
-    console.log(userInfo.id);
-
     db.query(q, [userInfo.id], (err, data) => {
       if (err) return res.status(500).json(err);
       return res.status(200).json(data);

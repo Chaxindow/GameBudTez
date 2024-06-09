@@ -130,15 +130,32 @@ const Product = () => {
 
   const handleAddToCart = async () => {
     try {
-      console.log(currentUser.id);
-      console.log(productId);
+      const { data: existingCartItems } = await makeRequest.get(
+        `/cart/${currentUser.id}`
+      );
 
-      const response = await makeRequest.post("/cart/add", {
-        userId: currentUser.id,
-        productId: productId,
-        quantity: quantity,
-      });
-      // window.location.href = "/sepet";
+      const existingCartItem = existingCartItems.find(
+        (item) => item.productId === parseInt(productId)
+      );
+
+      if (existingCartItem) {
+        await makeRequest.put(`/cart/update/${productId}`, {
+          userId: currentUser.id,
+          productId: productId,
+          quantity: existingCartItem.quantity + quantity,
+        });
+      } else {
+        console.log(currentUser.id);
+        console.log(productId);
+
+        const response = await makeRequest.post("/cart/add", {
+          userId: currentUser.id,
+          productId: productId,
+          quantity: quantity,
+        });
+      }
+
+      window.location.href = "/sepet";
     } catch (error) {
       console.error("Error adding product to cart:", error);
     }
