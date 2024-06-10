@@ -2,14 +2,18 @@ import styled from "styled-components";
 import Announcement from "../components/Announcement";
 import Footer from "../components/Footer";
 import StoreNavbar from "../components/StoreNavbar";
-import AddIcon from '@mui/icons-material/Add';
-import RemoveIcon from '@mui/icons-material/Remove';
+import AddIcon from "@mui/icons-material/Add";
+import RemoveIcon from "@mui/icons-material/Remove";
+import { useContext, useEffect, useState } from "react";
+import { AuthContext } from "../context/authContext";
+import { useQuery } from "@tanstack/react-query";
+import { makeRequest } from "../axios";
+import { Link } from "react-router-dom";
 
 const Container = styled.div``;
 
 const Wrapper = styled.div`
   padding: 20px;
-  
 `;
 
 const Title = styled.h1`
@@ -35,9 +39,7 @@ const TopButton = styled.button`
   color: ${(props) => props.type === "filled" && "white"};
 `;
 
-const TopTexts = styled.div`
-  
-`;
+const TopTexts = styled.div``;
 const TopText = styled.span`
   text-decoration: underline;
   cursor: pointer;
@@ -47,8 +49,6 @@ const TopText = styled.span`
 const Bottom = styled.div`
   display: flex;
   justify-content: space-between;
-  
-
 `;
 
 const Info = styled.div`
@@ -58,7 +58,6 @@ const Info = styled.div`
 const Product = styled.div`
   display: flex;
   justify-content: space-between;
-  
 `;
 
 const ProductDetail = styled.div`
@@ -107,13 +106,11 @@ const ProductAmountContainer = styled.div`
 const ProductAmount = styled.div`
   font-size: 24px;
   margin: 5px;
-  
 `;
 
 const ProductPrice = styled.div`
   font-size: 30px;
   font-weight: 200;
-  
 `;
 
 const Hr = styled.hr`
@@ -155,82 +152,133 @@ const Button = styled.button`
 `;
 
 const Cart = () => {
+  const { currentUser } = useContext(AuthContext);
+  const [totalPrice, setTotalPrice] = useState(0);
+
+  const {
+    isLoading: cartLoading,
+    error: cartError,
+    data: cartItems,
+  } = useQuery({
+    queryKey: ["cart", currentUser.id],
+    queryFn: async () => {
+      try {
+        const response = await makeRequest.get(`/cart/${currentUser.id}`);
+        return response.data;
+      } catch (error) {
+        throw new Error("Error fetching cart items");
+      }
+    },
+  });
+
+  const {
+    isLoading: detailsLoading,
+    error: detailsError,
+    data: productDetails,
+  } = useQuery({
+    queryKey: ["productDetails"],
+    queryFn: async () => {
+      try {
+        const response = await makeRequest.get("/products");
+        // ProductDetails'ı productId'lerine göre düzenlemek için bir objeye dönüştürüyoruz
+        const detailsMap = {};
+        response.data.forEach((product) => {
+          detailsMap[product.id] = product;
+        });
+        return detailsMap;
+      } catch (error) {
+        throw new Error("Error fetching product details");
+      }
+    },
+  });
+
+  const calculateTotalPrice = () => {
+    if (!cartItems || !productDetails) return 0;
+    let total = 0;
+    cartItems.forEach((item) => {
+      const product = productDetails[item.productId];
+      if (product) {
+        total += parseInt(item.quantity) * parseInt(product.price);
+      }
+    });
+    return total;
+  };
+
+  useEffect(() => {
+    setTotalPrice(calculateTotalPrice());
+  }, [cartItems, productDetails]);
+
   return (
     <Container>
       <StoreNavbar />
       <Announcement />
       <Wrapper>
         <Title>Sepetiniz</Title>
-        <Top>
-          <TopButton>Alışverişe Devam Et</TopButton>
-          <TopTexts>
-            <TopText>Sepetiniz(2)</TopText>
-            <TopText>Favorileriniz (0)</TopText>
-          </TopTexts>
-          
-        </Top>
+        {cartItems && cartItems.length === 0 ? (
+          <Top>Sepetinize ürün yok</Top>
+        ) : (
+          <Top>
+            <TopButton>Alışverişe Devam Et</TopButton>
+
+            <TopTexts>
+              <TopText>Sepetiniz({cartItems ? cartItems.length : 0})</TopText>
+            </TopTexts>
+          </Top>
+        )}
         <Bottom>
           <Info>
-            <Product>
-              <ProductDetail>
-                <Image src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRv2B8ljhk6jBdoQsa2P9CrSpBVGcQvAeXVWg&s" />
-                <Details>
-                  <ProductName>
-                    <b>Oyun:</b> EA FC 24 1 VS 1
-                  </ProductName>
-                  <ProductId>
-                    <b>ID:</b> 93813718293
-                  </ProductId>
-                  
-                </Details>
-              </ProductDetail>
-              <PriceDetail>
-                <ProductAmountContainer>
-                  <AddIcon />
-                  <ProductAmount>1</ProductAmount>
-                  <RemoveIcon />
-                </ProductAmountContainer>
-                <ProductPrice>100 TL</ProductPrice>
-              </PriceDetail>
-            </Product>
-            <Hr />
-            <Product>
-              <ProductDetail>
-                <Image src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQcn0pnKE8wcSr_smFjmJULuA-qJZ6T5LNB9Q&s" />
-                <Details>
-                  <ProductName>
-                    <b>Oyun:</b> CS GO  5 vs 5 Takımlı 
-                  </ProductName>
-                  <ProductId>
-                    <b>ID:</b> 93813718293
-                  </ProductId>
-                </Details>
-              </ProductDetail>
-              <PriceDetail>
-                <ProductAmountContainer>
-                  <AddIcon />
-                  <ProductAmount>1</ProductAmount>
-                  <RemoveIcon />
-                </ProductAmountContainer>
-                <ProductPrice>50 TL</ProductPrice>
-              </PriceDetail>
-            </Product>
+            {cartItems &&
+              cartItems.length > 0 &&
+              cartItems.map((item) => {
+                const product = productDetails[item.productId];
+                return (
+                  <Product key={item.productId}>
+                    <ProductDetail>
+                      <Image src={product.img} />
+                      <Details>
+                        <ProductName>
+                          <b>Oyun:</b> {product.title}
+                        </ProductName>
+                        <ProductId>
+                          <b>ID:</b> {product.id}08217423
+                        </ProductId>
+                      </Details>
+                    </ProductDetail>
+                    <PriceDetail>
+                      <ProductAmountContainer>
+                        <ProductAmount>{item.quantity} Adet</ProductAmount>
+                      </ProductAmountContainer>
+                      <ProductPrice>{product.price}</ProductPrice>
+                    </PriceDetail>
+                  </Product>
+                );
+              })}
           </Info>
+
           <Summary>
             <SummaryTitle>Sipariş Özeti</SummaryTitle>
-            <SummaryItem>
-              
-            </SummaryItem>
-            <SummaryItem>
-             
-            </SummaryItem>
-            
+            {cartItems &&
+              cartItems.length > 0 &&
+              cartItems.map((item) => {
+                const product = productDetails[item.productId];
+                const productTotalPrice =
+                  parseInt(item.quantity) * parseInt(product.price);
+
+                return (
+                  <SummaryItem key={item.productId}>
+                    <SummaryItemText>
+                      {product.title} x {item.quantity}
+                    </SummaryItemText>
+                    <SummaryItemPrice>{productTotalPrice} TL</SummaryItemPrice>
+                  </SummaryItem>
+                );
+              })}
+
             <SummaryItem type="total">
               <SummaryItemText>Toplam</SummaryItemText>
-              <SummaryItemPrice>150 TL</SummaryItemPrice>
+              <SummaryItemPrice>{totalPrice} TL</SummaryItemPrice>
             </SummaryItem>
             <Button style={{ cursor: "pointer" }}>Ödeme Yap</Button>
-
           </Summary>
         </Bottom>
       </Wrapper>
