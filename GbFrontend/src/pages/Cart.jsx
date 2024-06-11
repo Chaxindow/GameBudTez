@@ -9,6 +9,8 @@ import { AuthContext } from "../context/authContext";
 import { useQuery } from "@tanstack/react-query";
 import { makeRequest } from "../axios";
 import { Link } from "react-router-dom";
+import { loadStripe } from "@stripe/stripe-js";
+import axios from "axios";
 
 const Container = styled.div``;
 
@@ -208,6 +210,56 @@ const Cart = () => {
     setTotalPrice(calculateTotalPrice());
   }, [cartItems, productDetails]);
 
+  const stripePromise = loadStripe(
+    "pk_test_51OTiP7JqZiK5gb9STAFpgaUTATZsHyp4EDM0bplApuXUMZoGe5fKoJ5Gx5YhB4y1eXk5Lv67jACjeAh9yfLvp8fN00RmyRjI7A"
+  );
+
+  const handleCheckout = async () => {
+    try {
+      if (!cartItems || cartItems.length === 0) {
+        throw new Error("Sepetiniz boş.");
+      }
+
+      const stripe = await stripePromise;
+
+      // Line items oluşturma
+      const lineItems = cartItems.map((item) => ({
+        price_data: {
+          currency: "usd",
+          product_data: {
+            name: productDetails[item.productId].title,
+            description: productDetails[item.productId].description,
+            images: [productDetails[item.productId].img], // Opsiyonel: Ürün resmi
+          },
+          unit_amount: parseInt(productDetails[item.productId].price) * 100,
+        },
+        quantity: parseInt(item.quantity),
+      }));
+
+      console.log(lineItems);
+
+      // API endpoint'i ve istek
+      const response = await fetch(
+        "http://localhost:8800/api/create-checkout-session",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ lineItems }),
+        }
+      );
+
+      // Yanıtı JSON olarak al
+      const data = await response.json();
+
+      // Stripe checkout sayfasına yönlendirme
+      await stripe.redirectToCheckout({ sessionId: data.id });
+    } catch (error) {
+      console.error("Error creating checkout session:", error);
+    }
+  };
+
   return (
     <Container>
       <StoreNavbar />
@@ -278,7 +330,9 @@ const Cart = () => {
               <SummaryItemText>Toplam</SummaryItemText>
               <SummaryItemPrice>{totalPrice} TL</SummaryItemPrice>
             </SummaryItem>
-            <Button style={{ cursor: "pointer" }}>Ödeme Yap</Button>
+            <Button style={{ cursor: "pointer" }} onClick={handleCheckout}>
+              Ödeme Yap
+            </Button>
           </Summary>
         </Bottom>
       </Wrapper>

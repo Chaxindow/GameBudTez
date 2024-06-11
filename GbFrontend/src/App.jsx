@@ -22,6 +22,7 @@ import ProductList from "./pages/ProductList";
 import Product from "./pages/Product";
 import Cart from "./pages/Cart";
 import Chat from "./pages/chat/Chat";
+import Success from "./pages/StripePages/Success";
 
 function App() {
   const { currentUser } = useContext(AuthContext);
@@ -121,6 +122,15 @@ function App() {
         <QueryClientProvider client={queryClient}>
           {" "}
           <Chat />{" "}
+        </QueryClientProvider>
+      ),
+    },
+    {
+      path: "/success", // Mağaza rotası
+      element: (
+        <QueryClientProvider client={queryClient}>
+          {" "}
+          <Success />{" "}
         </QueryClientProvider>
       ),
     },

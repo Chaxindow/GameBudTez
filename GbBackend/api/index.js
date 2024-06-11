@@ -10,6 +10,7 @@ import cartRoutes from "./routes/carts.js";
 import cors from "cors";
 import multer from "multer";
 import cookieParser from "cookie-parser";
+import checkoutRoutes from "./routes/checkouts.js";
 
 const app = express();
 
@@ -49,8 +50,9 @@ app.use("/api/comments", commentRoutes);
 app.use("/api/likes", likeRoutes);
 app.use("/api/relationships", relationshipRoutes);
 app.use("/api/cart", cartRoutes);
-
 app.use("/api/products", productRoutes);
+
+app.use("/api", checkoutRoutes);
 
 app.listen(8800, () => {
   console.log("API Works");
