@@ -58,7 +58,7 @@ const Navbar = () => {
       </div>
       <div className="right">
         <PersonOutlinedIcon />
-        <Link to="/chat">
+        <Link to="/messenger">
           <EmailOutlinedIcon />
         </Link>
         <NotificationsOutlinedIcon />

@@ -21,8 +21,8 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import ProductList from "./pages/ProductList";
 import Product from "./pages/Product";
 import Cart from "./pages/Cart";
-import Chat from "./pages/chat/Chat";
 import Success from "./pages/StripePages/Success";
+import Messenger from "./pages/messenger/Messenger";
 
 function App() {
   const { currentUser } = useContext(AuthContext);
@@ -90,6 +90,16 @@ function App() {
       ),
     },
     {
+      path: "/messenger", // messenger route
+      element: (
+        <QueryClientProvider client={queryClient}>
+          {" "}
+          <Messenger />
+        </QueryClientProvider>
+      ),
+    },
+
+    {
       path: "/productlist", // Mağaza rotası
       element: (
         <QueryClientProvider client={queryClient}>
@@ -116,15 +126,7 @@ function App() {
         </QueryClientProvider>
       ),
     },
-    {
-      path: "/chat", // Mağaza rotası
-      element: (
-        <QueryClientProvider client={queryClient}>
-          {" "}
-          <Chat />{" "}
-        </QueryClientProvider>
-      ),
-    },
+
     {
       path: "/success", // Mağaza rotası
       element: (

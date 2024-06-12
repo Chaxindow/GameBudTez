@@ -11,6 +11,7 @@ import cors from "cors";
 import multer from "multer";
 import cookieParser from "cookie-parser";
 import checkoutRoutes from "./routes/checkouts.js";
+import conversationsRoutes from "./routes/conversations.js";
 
 const app = express();
 
@@ -51,8 +52,9 @@ app.use("/api/likes", likeRoutes);
 app.use("/api/relationships", relationshipRoutes);
 app.use("/api/cart", cartRoutes);
 app.use("/api/products", productRoutes);
-
 app.use("/api", checkoutRoutes);
+
+app.use("/api/conversations", conversationsRoutes);
 
 app.listen(8800, () => {
   console.log("API Works");

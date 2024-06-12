@@ -1,0 +1,29 @@
+.navbar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 60px; /* Navbar yüksekliği */
+  background-color: #fff; /* Arka plan rengi */
+  border-bottom: 1px solid #ccc; /* Alt çizgi */
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+}
+
+.brand {
+  font-weight: bold;
+  font-size: 1.5rem;
+  text-decoration: none;
+  color: inherit;
+}
+
+.brand::after {
+  content: "";
+  display: block;
+  width: 100%;
+  height: 2px; /* Çizgi yüksekliği */
+  background-color: #c90d0d; /* Çizgi rengi */
+  margin-top: 4px; /* Çizginin GameBud yazısından ayrılma mesafesi */
+}
