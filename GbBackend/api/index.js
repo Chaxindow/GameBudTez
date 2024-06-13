@@ -12,6 +12,7 @@ import multer from "multer";
 import cookieParser from "cookie-parser";
 import checkoutRoutes from "./routes/checkouts.js";
 import conversationsRoutes from "./routes/conversations.js";
+import messageRoutes from "./routes/messages.js";
 
 const app = express();
 
@@ -53,8 +54,9 @@ app.use("/api/relationships", relationshipRoutes);
 app.use("/api/cart", cartRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api", checkoutRoutes);
-
 app.use("/api/conversations", conversationsRoutes);
+
+app.use("/api/messages", messageRoutes);
 
 app.listen(8800, () => {
   console.log("API Works");
