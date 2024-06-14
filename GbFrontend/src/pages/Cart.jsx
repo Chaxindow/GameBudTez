@@ -133,6 +133,17 @@ const SummaryTitle = styled.h1`
   font-weight: 200;
 `;
 
+const buttonStyles = {
+  backgroundColor: "#ff0000",
+  color: "#ffffff",
+  border: "none",
+  padding: "10px 20px",
+  fontSize: "16px",
+  cursor: "pointer",
+  borderRadius: "5px",
+  outline: "none",
+};
+
 const SummaryItem = styled.div`
   margin: 30px 0px;
   display: flex;
@@ -172,6 +183,27 @@ const Cart = () => {
       }
     },
   });
+
+  const deleteCartItem = async (productId) => {
+    try {
+      const response = await makeRequest.delete(`/cart/delete/${productId}`);
+      return response.data;
+    } catch (error) {
+      console.error("Ürün silinirken bir hata oluştu.", error);
+      throw error;
+    }
+  };
+
+  const handleDeleteCartItem = async (deletedProductId) => {
+    try {
+      await deleteCartItem(deletedProductId);
+      // Ürün silindikten sonra sayfayı yenile
+      window.location.reload();
+    } catch (error) {
+      console.error("Ürün silinirken bir hata oluştu.", error);
+      // Hata durumunda kullanıcıya uygun bir geri bildirim sağlayabilirsiniz
+    }
+  };
 
   const {
     isLoading: detailsLoading,
@@ -294,6 +326,12 @@ const Cart = () => {
                         <ProductId>
                           <b>ID:</b> {product.id}08217423
                         </ProductId>
+                        <button
+                          onClick={() => handleDeleteCartItem(item.productId)}
+                          style={buttonStyles}
+                        >
+                          Kaldır
+                        </button>
                       </Details>
                     </ProductDetail>
                     <PriceDetail>
