@@ -79,13 +79,24 @@ export const findUserConversation = (req, res) => {
   if (!token) return res.status(401).json("Not logged in!");
 
   jwt.verify(token, "secretkey", (err, userInfo) => {
-    const userId = req.params.userId; // URL'den userId parametresini al
+    if (err) {
+      console.error("Token verification error:", err);
+      return res.status(403).json("Token is not valid!");
+    }
+
+    const userId = req.params.userId;
 
     const query = `
-      SELECT c.id, c.createdAt, c.updatedAt
+      SELECT c.id AS conversationId, c.createdAt, c.updatedAt, GROUP_CONCAT(cm.userId) AS memberIds
       FROM Conversations c
       JOIN ConversationMembers cm ON c.id = cm.conversationId
-      WHERE cm.userId = ?
+      WHERE c.id IN (
+        SELECT c.id
+        FROM Conversations c
+        JOIN ConversationMembers cm ON c.id = cm.conversationId
+        WHERE cm.userId = ?
+      )
+      GROUP BY c.id, c.createdAt, c.updatedAt
     `;
 
     db.query(query, [userId], (err, results) => {
@@ -96,9 +107,10 @@ export const findUserConversation = (req, res) => {
 
       // Sonuçları işle ve cevap olarak gönder
       const formattedResults = results.map((result) => ({
-        id: result.id,
+        id: result.conversationId,
         createdAt: result.createdAt,
         updatedAt: result.updatedAt,
+        memberIds: result.memberIds.split(",").map(Number),
       }));
 
       res.status(200).json(formattedResults);

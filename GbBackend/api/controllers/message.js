@@ -44,7 +44,7 @@ export const getMessagesByConvId = (req, res) => {
     if (err) return res.status(403).json("Token is not valid!");
 
     const query = `
-    SELECT m.id, m.text, m.createdAt, m.updatedAt, u.username AS senderUsername
+    SELECT m.id, m.text, m.createdAt, m.updatedAt, u.id AS sender
     FROM Messages m
     JOIN Users u ON m.senderId = u.id
     WHERE m.conversationId = ?
