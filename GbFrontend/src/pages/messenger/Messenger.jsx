@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import "./messenger.scss";
 import Conversation from "../../components/conversations/Conversation";
 import MessengerNavbar from "../../components/messangerNavbars/MessengerNavbar";
@@ -13,6 +13,7 @@ export default function Messenger() {
   const [currentChat, setCurrentChat] = useState(null);
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
+  const scrollRef = useRef();
 
   useEffect(() => {
     const getConversations = async () => {
@@ -76,9 +77,12 @@ export default function Messenger() {
     }
   };
 
-  messages.map((m) => {
-    //console.log(m.sender);
-  });
+  useEffect(() => {
+    if (messages.length > 0 && scrollRef.current) {
+      scrollRef.current.scrollIntoView({ behavior: "smooth", block: "end" });
+    }
+  }, [messages]);
+
   return (
     <>
       <MessengerNavbar />
@@ -98,20 +102,22 @@ export default function Messenger() {
             {currentChat ? (
               <>
                 <div className="chatBoxTop">
-                  {messages.map((msg) => {
-                    if (!msg.sender) {
-                      console.error(
-                        `msg.sender is undefined or null for message with id ${msg.id}`
+                  <div ref={scrollRef}>
+                    {messages.map((msg) => {
+                      if (!msg.sender) {
+                        console.error(
+                          `msg.sender is undefined or null for message with id ${msg.id}`
+                        );
+                      }
+                      return (
+                        <Message
+                          key={msg.id}
+                          message={msg}
+                          own={msg.sender === currentUser.id}
+                        />
                       );
-                    }
-                    return (
-                      <Message
-                        key={msg.id}
-                        message={msg}
-                        own={msg.sender === currentUser.id}
-                      />
-                    );
-                  })}
+                    })}
+                  </div>
                 </div>
               </>
             ) : (
