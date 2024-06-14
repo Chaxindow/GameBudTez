@@ -13,14 +13,12 @@ export default function Messenger() {
   const [conversations, setConversations] = useState([]);
   const [currentChat, setCurrentChat] = useState(null);
   const [messages, setMessages] = useState([]);
-  const [newMessage, setNewMessage] = useState("");
+  const [newMessage, setNewMessage] = useState([]);
   const [arrivalMessage, setArrivalMessage] = useState(null);
   const [onlineUsers, setOnlineUsers] = useState([]);
   const socket = useRef();
   const scrollRef = useRef();
   const [tempFriends, setTempfriends] = useState([]);
-
-  //console.log(currentUser.id);
 
   useEffect(() => {
     const getUsersFriends = async () => {
@@ -36,9 +34,11 @@ export default function Messenger() {
     getUsersFriends();
   }, [currentUser.id]);
 
+  // arival
   useEffect(() => {
     socket.current = io("ws://localhost:8900");
     socket.current.on("getMessage", (data) => {
+      console.log("Received message:", data);
       setArrivalMessage({
         sender: data.senderId,
         text: data.text,
@@ -46,16 +46,16 @@ export default function Messenger() {
       });
     });
   }, []);
-  //console.log(tempFriends);
 
   useEffect(() => {
-    arrivalMessage &&
-      currentChat?.memberIds.includes(arrivalMessage.sender) &&
+    //  console.log("Arrival message:", arrivalMessage);
+    if (
+      arrivalMessage &&
+      currentChat?.memberIds.includes(arrivalMessage.sender)
+    ) {
       setMessages((prev) => [...prev, arrivalMessage]);
+    }
   }, [arrivalMessage, currentChat]);
-
-  // console.log(tempFriends);
-  // console.log(currentUser.id); // friendsler geldi şu anki userın
 
   useEffect(() => {
     socket.current.emit("addUser", currentUser.id);
@@ -64,7 +64,7 @@ export default function Messenger() {
         users.some((u) => u.userId == f.id)
       );
       setOnlineUsers(filteredOnlineUsers);
-      console.log(filteredOnlineUsers); // Güncellenmiş onlineUsers değerini doğrudan burada kullanabilirsiniz
+      // console.log(filteredOnlineUsers); // Güncellenmiş onlineUsers
     });
   }, [currentUser.id, tempFriends]);
 
@@ -151,7 +151,13 @@ export default function Messenger() {
           <div className="chatMenuWrapper">
             <input placeholder="Search for friends" className="chatMenuInput" />
             {conversations.map((c) => (
-              <div key={c.id} onClick={() => setCurrentChat(c)}>
+              <div
+                key={c.id}
+                onClick={() => {
+                  setCurrentChat(c);
+                  console.log("Current Chat:", c);
+                }}
+              >
                 <Conversation conversation={c} currentUser={currentUser} />
               </div>
             ))}
@@ -202,6 +208,7 @@ export default function Messenger() {
               onlineUsers={onlineUsers}
               currentId={currentUser.id}
               setCurrentChat={setCurrentChat}
+              conversations={conversations}
             />
           </div>
         </div>

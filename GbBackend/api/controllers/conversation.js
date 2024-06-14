@@ -117,3 +117,42 @@ export const findUserConversation = (req, res) => {
     });
   });
 };
+
+export const getTwoUserConversation = (req, res) => {
+  const { firstUserId, secondUserId } = req.params;
+
+  const query = `
+    SELECT c.id AS conversationId, c.createdAt, c.updatedAt, GROUP_CONCAT(cm.userId) AS memberIds
+    FROM Conversations c
+    JOIN ConversationMembers cm ON c.id = cm.conversationId
+    WHERE c.id IN (
+      SELECT c.id
+      FROM Conversations c
+      JOIN ConversationMembers cm ON c.id = cm.conversationId
+      WHERE cm.userId = ?
+    ) AND c.id IN (
+      SELECT c.id
+      FROM Conversations c
+      JOIN ConversationMembers cm ON c.id = cm.conversationId
+      WHERE cm.userId = ?
+    )
+    GROUP BY c.id, c.createdAt, c.updatedAt
+  `;
+
+  db.query(query, [firstUserId, secondUserId], (err, results) => {
+    if (err) {
+      console.error("Error fetching conversations:", err);
+      return res.status(500).json({ error: "Internal server error" });
+    }
+
+    // Sonuçları işle ve cevap olarak gönder
+    const formattedResults = results.map((result) => ({
+      id: result.conversationId,
+      createdAt: result.createdAt,
+      updatedAt: result.updatedAt,
+      memberIds: result.memberIds.split(",").map(Number),
+    }));
+
+    res.status(200).json(formattedResults);
+  });
+};

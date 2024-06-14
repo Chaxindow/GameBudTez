@@ -2,28 +2,39 @@ import { useEffect, useState } from "react";
 import "./chatOnline.scss";
 import { makeRequest } from "../../axios";
 
-export default function ChatOnline({ onlineUsers, currentId, setCurrentChat }) {
-  const [friends, setFriends] = useState([]);
-  const [onlineFriends, setOnlineFriends] = useState([]);
+export default function ChatOnline({
+  onlineUsers,
+  currentId,
+  setCurrentChat,
+  conversations,
+}) {
+  const handleClick = async (user) => {
+    try {
+      const res = await makeRequest.get(
+        `/conversations/find/${currentId}/${user.id}`
+      );
 
-  /*useEffect(() => {
-    const getFriends = async () => {
-      const res = await makeRequest.get("/users/find/friends/" + currentId);
-      setFriends(res.data);
-    };
-    getFriends();
-  }, [currentId]);
+      const convDataId = res.data[0].id;
 
-  useEffect(() => {
-    setOnlineFriends(friends.filter((f) => onlineUsers.includes(f._id)));
-  }, [friends, onlineUsers]);
+      console.log(convDataId);
+      console.log(conversations);
 
-  //console.log(onlineUsers); */
+      const matchedConversation = res.data.find(
+        (conv) => conv.id === convDataId
+      );
+
+      console.log(matchedConversation);
+
+      setCurrentChat(matchedConversation);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <div className="chatOnline">
       {onlineUsers.map((o) => (
-        <div className="chatOnlineFriend">
+        <div className="chatOnlineFriend" onClick={() => handleClick(o)}>
           <div className="chatOnlineImgContainer">
             <img
               className="chatOnlineImg"

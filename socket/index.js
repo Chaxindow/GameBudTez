@@ -21,15 +21,12 @@ getUser = (userId) => {
 };
 
 io.on("connection", (socket) => {
-  //when connect
-  console.log("a user connected.");
-  // take userId and socketId from server
+  console.log("A user connected.");
+
   socket.on("addUser", (userId) => {
     addUser(userId, socket.id);
     io.emit("getUsers", users);
-    // console.log("Tüm kullanıcılar:", users);
   });
-
   // send and get message
   socket.on("sendMessage", ({ senderId, receiverId, text }) => {
     const receiver = getUser(receiverId);
@@ -38,14 +35,20 @@ io.on("connection", (socket) => {
         senderId,
         text,
       });
+      console.log("getMessage calisti");
     } else {
-      console.log(`Alıcı bulunamadı: ${receiverId}`);
+      console.log(`Receiver not found: ${receiverId}`);
     }
+  });
+
+  socket.on("getMessage", (data) => {
+    console.log("Received message:", data);
+    // Burada gelen veriyi işleyebilirsiniz.
   });
 
   socket.on("disconnect", () => {
     // when disconnect
-    console.log("a user disconnected!");
+    console.log("A user disconnected.");
     removeUser(socket.id);
     io.emit("getUsers", users);
   });
