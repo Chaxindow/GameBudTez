@@ -14,21 +14,36 @@ export default function Messenger() {
   const [currentChat, setCurrentChat] = useState(null);
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
+  const [arrivalMessage, setArrivalMessage] = useState(null);
+
   const socket = useRef();
   const scrollRef = useRef();
 
   useEffect(() => {
     socket.current = io("ws://localhost:8900");
+    socket.current.on("getMessage", (data) => {
+      setArrivalMessage({
+        sender: data.senderId,
+        text: data.text,
+        createdAt: Date.now(),
+      });
+    });
   }, []);
+
+  useEffect(() => {
+    arrivalMessage &&
+      currentChat?.memberIds.includes(arrivalMessage.sender) &&
+      setMessages((prev) => [...prev, arrivalMessage]);
+  }, [arrivalMessage, currentChat]);
 
   useEffect(() => {
     socket.current.emit("addUser", currentUser.id);
     socket.current.on("getUsers", (users) => {
-      console.log(users);
+      //  console.log(users);
     });
   }, [currentUser.id]);
 
-  console.log(socket);
+  //console.log(socket);
 
   useEffect(() => {
     const getConversations = async () => {
@@ -47,7 +62,6 @@ export default function Messenger() {
     const getMessages = async () => {
       try {
         const res = await makeRequest.get("/messages/" + currentChat?.id);
-        // console.log("Fetched messages:", res.data);
         setMessages(res.data);
       } catch (err) {
         console.log(err);
@@ -56,7 +70,7 @@ export default function Messenger() {
     getMessages();
   }, [currentChat]);
 
-  //console.log(currentChat.id);
+  //console.log(currentChat);
 
   const sendMessage = async () => {
     const message = {
@@ -65,28 +79,37 @@ export default function Messenger() {
       text: newMessage,
     };
 
+    // hata olabilir 1
+    const receiverId = currentChat.memberIds.find(
+      (member) => member !== currentUser.id
+    );
+
+    socket.current.emit("sendMessage", {
+      senderId: currentUser.id,
+      receiverId,
+      text: newMessage,
+    });
+
     try {
       const response = await makeRequest.post("/messages", message);
 
-      // response.data içinde senderId alanını kontrol et
       if (!response.data || !response.data.senderId) {
         console.error(
           "Response data does not contain senderId:",
           response.data
         );
-        return; // Hata durumunda işlemi sonlandır
+        return;
       }
 
-      // Yeni mesajı ekleyerek messages durumunu güncelle
       setMessages((prevMessages) => [
         ...prevMessages,
         { ...response.data, sender: response.data.senderId },
       ]);
 
-      // Input alanını temizle
       setNewMessage("");
 
-      console.log("Message sent successfully:", response.data);
+      // console.log("Message sent successfully:", response.data);
+      console.log(test);
     } catch (error) {
       console.error("Error sending message:", error);
     }

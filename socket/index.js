@@ -15,14 +15,38 @@ const removeUser = (socketId) => {
   users = users.filter((user) => user.socketId !== socketId);
 };
 
+getUser = (userId) => {
+  //console.log("Tüm kullanıcılarr:", users);
+  return users.find((user) => user.userId === userId);
+};
+
 io.on("connection", (socket) => {
+  //when connect
   console.log("a user connected.");
   // take userId and socketId from server
   socket.on("addUser", (userId) => {
     addUser(userId, socket.id);
     io.emit("getUsers", users);
+    // console.log("Tüm kullanıcılar:", users);
   });
+
+  // send and get message
+  socket.on("sendMessage", ({ senderId, receiverId, text }) => {
+    //console.log("Tüm kullanıcılar:", users);
+    const receiver = getUser(receiverId);
+    //console.log("receiver :", receiver);
+    if (receiver) {
+      io.to(receiver.socketId).emit("getMessage", {
+        senderId,
+        text,
+      });
+    } else {
+      console.log(`Alıcı bulunamadı: ${receiverId}`);
+    }
+  });
+
   socket.on("disconnect", () => {
+    // when disconnect
     console.log("a user disconnected!");
     removeUser(socket.id);
     io.emit("getUsers", users);
