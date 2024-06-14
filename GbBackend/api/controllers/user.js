@@ -40,3 +40,24 @@ export const updateUser = (req, res) => {
     );
   });
 };
+
+export const getUserFriends = (req, res) => {
+  const token = req.cookies.accesToken;
+
+  if (!token) return res.status(401).json("Not authenticated!");
+
+  jwt.verify(token, "secretkey", (err, userInfo) => {
+    if (err) return res.status(403).json("Token is not valid!");
+
+    const query = `
+      SELECT users.profilePic, users.name, users.id 
+      FROM relationships 
+      JOIN users ON relationships.followedUserId = users.id 
+      WHERE relationships.followerUserId = ?`;
+
+    db.query(query, [userInfo.id], (err, results) => {
+      if (err) return res.status(500).json(err);
+      return res.status(200).json(results);
+    });
+  });
+};

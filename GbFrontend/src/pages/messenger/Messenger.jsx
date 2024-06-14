@@ -15,9 +15,26 @@ export default function Messenger() {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const [arrivalMessage, setArrivalMessage] = useState(null);
-
+  const [onlineUsers, setOnlineUsers] = useState([]);
   const socket = useRef();
   const scrollRef = useRef();
+  const [tempFriends, setTempfriends] = useState([]);
+
+  //console.log(currentUser.id);
+
+  useEffect(() => {
+    const getUsersFriends = async () => {
+      try {
+        const res = await makeRequest.get(
+          "/users/find/friends/" + currentUser.id
+        );
+        setTempfriends(res.data);
+      } catch (error) {
+        console.error("Error fetching friends:", error);
+      }
+    };
+    getUsersFriends();
+  }, [currentUser.id]);
 
   useEffect(() => {
     socket.current = io("ws://localhost:8900");
@@ -29,6 +46,7 @@ export default function Messenger() {
       });
     });
   }, []);
+  //console.log(tempFriends);
 
   useEffect(() => {
     arrivalMessage &&
@@ -36,14 +54,19 @@ export default function Messenger() {
       setMessages((prev) => [...prev, arrivalMessage]);
   }, [arrivalMessage, currentChat]);
 
+  // console.log(tempFriends);
+  // console.log(currentUser.id); // friendsler geldi şu anki userın
+
   useEffect(() => {
     socket.current.emit("addUser", currentUser.id);
     socket.current.on("getUsers", (users) => {
-      //  console.log(users);
+      const filteredOnlineUsers = tempFriends.filter((f) =>
+        users.some((u) => u.userId == f.id)
+      );
+      setOnlineUsers(filteredOnlineUsers);
+      console.log(filteredOnlineUsers); // Güncellenmiş onlineUsers değerini doğrudan burada kullanabilirsiniz
     });
-  }, [currentUser.id]);
-
-  //console.log(socket);
+  }, [currentUser.id, tempFriends]);
 
   useEffect(() => {
     const getConversations = async () => {
@@ -109,7 +132,6 @@ export default function Messenger() {
       setNewMessage("");
 
       // console.log("Message sent successfully:", response.data);
-      console.log(test);
     } catch (error) {
       console.error("Error sending message:", error);
     }
@@ -176,9 +198,11 @@ export default function Messenger() {
         </div>
         <div className="chatOnline">
           <div className="chatOnlineWrapper">
-            <ChatOnline />
-            <ChatOnline />
-            <ChatOnline />
+            <ChatOnline
+              onlineUsers={onlineUsers}
+              currentId={currentUser.id}
+              setCurrentChat={setCurrentChat}
+            />
           </div>
         </div>
       </div>

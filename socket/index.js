@@ -32,9 +32,7 @@ io.on("connection", (socket) => {
 
   // send and get message
   socket.on("sendMessage", ({ senderId, receiverId, text }) => {
-    //console.log("Tüm kullanıcılar:", users);
     const receiver = getUser(receiverId);
-    //console.log("receiver :", receiver);
     if (receiver) {
       io.to(receiver.socketId).emit("getMessage", {
         senderId,
