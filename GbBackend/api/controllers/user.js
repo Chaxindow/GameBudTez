@@ -12,6 +12,23 @@ export const getUser = (req, res) => {
   });
 };
 
+export const getUserByName = (req, res) => {
+  const name = req.params.username;
+  const q = "SELECT * FROM users WHERE username= ? ";
+
+  db.query(q, [name], (err, data) => {
+    if (err) {
+      console.error("Error executing SQL query:", err);
+      return res.status(500).json(err);
+    }
+    if (data.length === 0) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    const { password, ...info } = data[0];
+    return res.json(info);
+  });
+};
+
 export const updateUser = (req, res) => {
   const token = req.cookies.accesToken;
   if (!token) return res.status(401).json("Not authenticated!");

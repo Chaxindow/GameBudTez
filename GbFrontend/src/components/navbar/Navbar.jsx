@@ -10,7 +10,7 @@ import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import StoreOutlinedIcon from "@mui/icons-material/StoreOutlined";
 import { Link, useNavigate } from "react-router-dom";
 import { DarkModeContext } from "../../context/darkModeContext";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { AuthContext } from "../../context/authContext";
 import { Button } from "@mui/material";
 import { makeRequest } from "../../axios";
@@ -19,6 +19,31 @@ const Navbar = () => {
   const { toggle, darkMode } = useContext(DarkModeContext);
   const { currentUser } = useContext(AuthContext);
   const navigate = useNavigate();
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const handleSearch = async () => {
+    if (searchTerm.trim() === "") {
+      return;
+    }
+
+    try {
+      // API isteği yapılıyor
+      const response = await makeRequest.get(`/users/find/name/${searchTerm}`);
+      if (response.data) {
+        // Kullanıcı bulunduysa
+        const userId = response.data.id;
+        // Kullanıcı profil sayfasına yönlendirme yapılıyor
+        window.location.href = `/profile/${userId}`;
+      } else {
+        // Kullanıcı bulunamazsa uygun bir mesaj gösterilebilir
+        console.log("Kullanıcı bulunamadı");
+      }
+    } catch (error) {
+      console.error("Error fetching user:", error);
+    }
+  };
+
+  console.log(searchTerm);
 
   const handleLogout = async () => {
     try {
@@ -53,7 +78,16 @@ const Navbar = () => {
 
         <div className="search">
           <SearchOutlinedIcon />
-          <input type="text" placeholder="Bul beni..." />
+          <input
+            type="text"
+            placeholder="Bul beni..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+
+          <Button variant="contained" onClick={handleSearch}>
+            Ara
+          </Button>
         </div>
       </div>
       <div className="right">
