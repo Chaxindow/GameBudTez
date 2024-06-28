@@ -21,8 +21,7 @@ const LeftBar = () => {
             </Link>
           </div>
           <div className="item">
-            <img src={Friends} alt="" />
-            <span>Friends</span>
+           
           </div>
         </div>
       </div>

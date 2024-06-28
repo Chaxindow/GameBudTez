@@ -92,8 +92,8 @@ const Navbar = () => {
       </div>
       <div className="right">
         <PersonOutlinedIcon />
-        <Link to="/messenger">
-          <EmailOutlinedIcon />
+        <Link to="/messenger" style={{ textDecoration: "none", color: "inherit" }}>
+          <EmailOutlinedIcon style={{ color: "inherit", marginTop: "6px" }}/>
         </Link>
         <NotificationsOutlinedIcon />
         <div className="user">
