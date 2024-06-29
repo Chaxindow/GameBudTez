@@ -17,37 +17,46 @@ const Post = ({ post }) => {
   const [commentOpen, setCommentOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
-  const { isLoading, error, data } = useQuery({
+  const { isLoading: likesLoading, error: likesError, data: likesData } = useQuery({
     queryKey: ["likes", post.id],
     queryFn: () =>
-      makeRequest.get("/likes?postId=" + post.id).then((res) => {
-        return res.data;
-      }),
+      makeRequest.get("/likes?postId=" + post.id).then((res) => res.data),
+  });
+
+  const { isLoading: commentsLoading, error: commentsError, data: commentsData } = useQuery({
+    queryKey: ["comments", post.id],
+    queryFn: () =>
+      makeRequest.get("/comments?postId=" + post.id).then((res) => res.data),
   });
 
   const queryClient = useQueryClient();
 
-  const mutation = useMutation({
+  const likeMutation = useMutation({
     mutationFn: (liked) => {
       if (liked) return makeRequest.delete("/likes?postId=" + post.id);
       return makeRequest.post("/likes", { postId: post.id });
     },
-    onSuccess: async () => {
-      queryClient.invalidateQueries(["likes"]);
+    onSuccess: () => {
+      queryClient.invalidateQueries(["likes", post.id]);
+    },
+  });
+
+  const commentMutation = useMutation({
+    mutationFn: (newComment) => makeRequest.post("/comments", newComment),
+    onSuccess: () => {
+      queryClient.invalidateQueries(["comments", post.id]);
     },
   });
 
   const deleteMutation = useMutation({
-    mutationFn: (postId) => {
-      return makeRequest.delete("/posts/" + postId);
-    },
-    onSuccess: async () => {
+    mutationFn: (postId) => makeRequest.delete("/posts/" + postId),
+    onSuccess: () => {
       queryClient.invalidateQueries(["posts"]);
     },
   });
 
   const handleLike = () => {
-    mutation.mutate(data.includes(currentUser.id));
+    likeMutation.mutate(likesData.includes(currentUser.id));
   };
 
   const handleDelete = () => {
@@ -61,10 +70,7 @@ const Post = ({ post }) => {
           <div className="userInfo">
             <img src={"/upload/" + post.profilePic} alt="" />
             <div className="details">
-              <Link
-                to={`/profile/${post.userId}`}
-                style={{ textDecoration: "none", color: "inherit" }}
-              >
+              <Link to={`/profile/${post.userId}`} style={{ textDecoration: "none", color: "inherit" }}>
                 <span className="name">{post.name}</span>
               </Link>
               <span className="date">{moment(post.createdAt).fromNow()}</span>
@@ -81,21 +87,18 @@ const Post = ({ post }) => {
         </div>
         <div className="info">
           <div className="item">
-            {isLoading ? (
+            {likesLoading ? (
               "loading"
-            ) : data.includes(currentUser.id) ? (
-              <FavoriteOutlinedIcon
-                style={{ color: "red" }}
-                onClick={handleLike}
-              />
+            ) : likesData.includes(currentUser.id) ? (
+              <FavoriteOutlinedIcon style={{ color: "red" }} onClick={handleLike} />
             ) : (
               <FavoriteBorderOutlinedIcon onClick={handleLike} />
             )}
-            {data?.length} Likes
+            {likesData?.length} Likes
           </div>
           <div className="item" onClick={() => setCommentOpen(!commentOpen)}>
             <TextsmsOutlinedIcon />
-            23 Yorum
+            {commentsLoading ? "loading" : `${commentsData?.length} Yorum`}
           </div>
           <div className="item">
             <SendOutlinedIcon />
