@@ -11,6 +11,11 @@ const Container = styled.div`
   justify-content: space-between;
 `;
 
+const ProductItem = styled.div`
+  flex: 1 1 650px;
+  margin: 10px;
+`;
+
 const Products = () => {
   const { isLoading, error, data } = useQuery({
     queryKey: ["products"],
@@ -22,17 +27,14 @@ const Products = () => {
 
   return (
     <Container>
-      <div className="products">
-        {isLoading && <div>Loading...</div>}
-        {error && <div>Error: {error.message}</div>}
-        {data && (
-          <ul>
-            {data.map((product) => (
-              <Product key={product.id} product={product} />
-            ))}
-          </ul>
-        )}
-      </div>
+      {isLoading && <div>Loading...</div>}
+      {error && <div>Error: {error.message}</div>}
+      {data &&
+        data.map((product) => (
+          <ProductItem key={product.id}>
+            <Product product={product} />
+          </ProductItem>
+        ))}
     </Container>
   );
 };

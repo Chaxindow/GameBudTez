@@ -20,9 +20,7 @@ const LeftBar = () => {
               <span>{currentUser.name}</span>
             </Link>
           </div>
-          <div className="item">
-           
-          </div>
+          <div className="item"></div>
         </div>
       </div>
     </div>

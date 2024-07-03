@@ -2,10 +2,10 @@ import mysql from "mysql";
 
 // MySQL bağlantı bilgilerini içeren nesne
 export const db = mysql.createConnection({
-  host: "localhost",
+  host: "192.168.1.22",
   port: 3306,
   user: "root",
-  password: "Doggerygt1907.",
+  password: "1234",
   database: "gamebud",
 });
 

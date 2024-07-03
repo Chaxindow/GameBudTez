@@ -14,6 +14,12 @@
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   max-width: 600px;
   width: 90%;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: #7a7a7a; /* Hover sırasında arka plan rengini koyulaştırır */
+  }
 }
 
 .success-content h2 {

@@ -92,14 +92,17 @@ const Navbar = () => {
       </div>
       <div className="right">
         <PersonOutlinedIcon />
-        <Link to="/messenger" style={{ textDecoration: "none", color: "inherit" }}>
-          <EmailOutlinedIcon style={{ color: "inherit", marginTop: "6px" }}/>
+        <Link
+          to="/messenger"
+          style={{ textDecoration: "none", color: "inherit" }}
+        >
+          <EmailOutlinedIcon style={{ color: "inherit", marginTop: "6px" }} />
         </Link>
         <NotificationsOutlinedIcon />
         <div className="user">
           <img src={"/upload/" + currentUser.profilePic} alt="" />
           <Link
-            to={`/profile/${currentUser.userId}`}
+            to={`/profile/${currentUser.id}`}
             style={{ textDecoration: "none", color: "inherit" }}
           >
             <span>{currentUser.name}</span>
